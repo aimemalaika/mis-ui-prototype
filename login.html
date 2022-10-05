@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+</head>
+
+<body>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="login.html">Login</a></li>
+    </ul>
+    <div>
+        <form id="fom">
+            <label for="username">Username</label>
+            <input type="text" name="username" id="username">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+            <input type="submit" value="Login">
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('fom');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            var data = JSON.stringify({
+                "user": {
+                    email,
+                    password
+                }
+            });
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.addEventListener("readystatechange", function () {
+                if (this.readyState === 4) {
+                    if (this.status === 200) {
+                        let localStore = window.localStorage;
+                        localStore.setItem('token', this.getResponseHeader('Authorization'));
+                        localStore.setItem('user', this.responseText);
+                        alert('Login Successful');
+                    } else {
+                        alert('Invalid username or password');
+                    }
+                }
+            });
+
+            xhr.open("POST", "http://127.0.0.1:8000/api/v1/signin");
+            xhr.setRequestHeader("JWT_AUD", "Test");
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.send(data);
+        })
+    </script>
+</body>
+
+</html>
