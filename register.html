@@ -29,23 +29,35 @@
             </div>
         </div>
     </nav>
-    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div id="toast" class="toast position-absolute" role="alert" aria-live="assertive" aria-atomic="true" style="left: 10%;padding: 20px;">
     </div>
     <div class="container ">
         <div class="col-6 mx-auto">
             <div class="row">
                 <div class="col-12">
-                    <h1 class="text-left mt-4">Login</h1>
+                    <h1 class="text-left mt-4">Register</h1>
                 </div>
                 <div class="col-12">
-                    <form id="login_form">
+                    <form id="register_form">
+                        <div class="mb-3">
+                            <label for="first_name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="first_name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="last_name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="last_name">
+                        </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+                            <input type="email" class="form-control" id="email">
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password_confirmation" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="password_confirmation">
                         </div>
                         <button id="submit" type="submit" class="btn btn-primary">Submit</button>
                     </form>

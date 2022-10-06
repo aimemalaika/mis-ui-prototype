@@ -114,6 +114,33 @@ const loginUser = async (email, password) => {
 // login user
 
 
+// register user
+const registerUser = async (first_name, last_name, email, password, password_confirmation) => {
+    const request = await fetch(`${SERVER}/signup/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            "user": {
+                first_name: first_name,
+                last_name: last_name,
+                email: email,
+                password: password,
+                password_confirmation: password_confirmation
+            }
+        }),
+    });
+    const response = await request.json();
+    if (request.status === 201) {
+        response.status = 'success';
+    } else {
+        response.status = 'error'
+    }
+    return response
+}
+
+
 $(document).ready(function () {
     const login_status = is_logged_in();
     login_status.then((status) => {
@@ -126,6 +153,7 @@ $(document).ready(function () {
             $("#profile_name").html(`<a class="nav-link bg-success text-white" href="logout.html">${first_name} ${last_name}</a>`);
         } else {
             $("#profile_name").html(`<a class="nav-link" href="login.html">Login</a>`)
+            $("#navigation_list").append(`<a class="nav-link" href="register.html">Register</a>`)
         }
     });
 
@@ -171,7 +199,7 @@ $(document).ready(function () {
                         `<option value="${program.id}">${name}</option>`
                     )
                 })
-            }else{
+            } else {
                 $("#program").append(`<option disabled value="">No program available</option>`);
                 $("#toast").html(add_notify('Information', 'No program found for this campus at the moment'));
                 $("#toast").toast('show');
@@ -203,7 +231,7 @@ $(document).ready(function () {
                         `<option value="${school.id}" school-id="${id}">${name}</option>`
                     )
                 })
-            }else{
+            } else {
                 $("#school").append(`<option disabled value="">No school found for this program</option>`);
                 $("#toast").html(add_notify('Information', 'No program found for this campus at the moment'));
                 $("#toast").toast('show');
@@ -235,7 +263,7 @@ $(document).ready(function () {
                         `<option value="${department.id}">${name}</option>`
                     )
                 })
-            }else{
+            } else {
                 $("#department").append(`<option disabled value="">No department found</option>`);
                 $("#toast").html(add_notify('Information', 'No program found for this campus at the moment'));
                 $("#toast").toast('show');
@@ -263,7 +291,7 @@ $(document).ready(function () {
                         `<option value="${year.id}">${name}</option>`
                     )
                 })
-            }else{
+            } else {
                 $("#academic_year").append(
                     `<option disabled value="">No academic year found</option>`
                 )
@@ -292,7 +320,7 @@ $(document).ready(function () {
                         `<option value="${classes.id}">${name}</option>`
                     )
                 })
-            }else{
+            } else {
                 $("#classes").append(
                     `<option disabled value="">No class found</option>`
                 )
@@ -322,7 +350,7 @@ $(document).ready(function () {
                         `<option value="${intake.id}">[${name}] open till ${new Date(end_date)})</option>`
                     )
                 })
-            }else{
+            } else {
                 $("#intake").append(
                     `<option disabled value="">No intake found</option>`
                 )
@@ -351,7 +379,7 @@ $(document).ready(function () {
                         `<option value="${section.id}">${name}</option>`
                     )
                 })
-            }else{
+            } else {
                 $("#section").append(
                     `<option disabled value="">No section found</option>`
                 )
@@ -383,4 +411,33 @@ $("#login_form").submit(function (e) {
             $(".toast").toast("show");
         }
     });
+});
+
+$("#register_form").submit(function (e) {
+    $('#submit').html(`
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    `)
+    e.preventDefault();
+    const first_name = $("#first_name").val();
+    const last_name = $("#last_name").val();
+    const email = $("#email").val();
+    const password = $("#password").val();
+    const password_confirmation = $("#password_confirmation").val();
+
+    registerUser(first_name, last_name, email, password, password_confirmation).then((response) => {
+        if (response.status === 'success') {
+            $("#toast").html(add_notify('Error', response.message))
+            $("#register_form").html(`<h3 class="text-center mt-5 text-success">${response.message}</h3>`)
+            $(".toast").toast("show");
+        } else {
+            $('#submit').text('Submit')
+            let errors = response.map((error) => {
+                return `<li class="m-0">${error}</li>`
+            })
+            $("#toast").html(add_notify('Error', errors.join('')))
+            $(".toast").toast("show");
+        }
+    })
 });
